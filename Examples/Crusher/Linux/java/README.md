@@ -16,7 +16,7 @@ eval exec echo "'$JAVA'" $JAVA_RUN_OPTS
 После запуска скрипта `kc.sh` напечатанные JVM-параметры были скопированы и добавлены в конфигурационный файл `config.json`. В этом файле необходимо заменить пути в полях `-Dkc.home.dir` и `-Djboss.server.config.dir` на актуальные. Их можно узнать, запустив скрипт:
 
 ```bash
-./target/keycloak-26.0.7/bin/kc.sh
+./keycloak-26.0.7/bin/kc.sh
 ```
 
  
