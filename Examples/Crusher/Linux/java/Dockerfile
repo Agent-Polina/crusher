@@ -12,4 +12,4 @@ ARG GROUP_ID
 RUN addgroup --gid $GROUP_ID $USER_NAME
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER_NAME
 RUN apt install nano
-COPY . /path/to/target
+COPY . /path/to/java
