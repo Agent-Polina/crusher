@@ -1,27 +1,32 @@
 # Общее описание
 
-Ниже приведён пример фаззинг-тестирования Java-приложения на базе Keycloak — программ-
+Ниже приведён пример фаззинг-тестирования Java-приложения на базе Keycloak — программ
 ного продукта с открытым исходным кодом, представляющего собой сервер идентификации и
 управления доступом.
 
 # Подготовка к фаззинг-тестированию
 
 `Keycloak` запускается в JVM с помощью скрипта `./target/keycloak-26.0.7/bin/kc.sh`, который автоматически формирует и передает параметры Java.
- Чтобы получить эти параметры, в скрипте запуска kc.sh была изменена последняя строка на следующую:
+ Чтобы вывести эти параметры, в скрипте запуска `kc.sh` была изменена последняя строка на следующую:
 
 ```
 eval exec echo "'$JAVA'" $JAVA_RUN_OPTS
 ```
 
-После запуска скрипта kc.sh полученные JVM-параметры были добавлены в конфигурационный файл config.json.
+После запуска скрипта `kc.sh` напечатанные JVM-параметры были скопированы и добавлены в конфигурационный файл `config.json`. В этом файле необходимо заменить пути в полях `-Dkc.home.dir` и `-Djboss.server.config.dir` на актуальные. Их можно узнать, запустив скрипт:
+
+```bash
+./target/keycloak-26.0.7/bin/kc.sh
+```
+
  
 # Фаззинг-тестирование в один поток
  Запустите фаззинг-тестирование:
 
 ```bash
-/path/to/crusher/bin_x86-64/fuzz -i in -o out -t 200000 --auto-stop-target-server \     
+/path/to/crusher/bin_x86-64/fuzz -i in -o out -t 20000 --auto-stop-target-server \     
 -T NetworkTCP --port 8080 --ip 127.0.0.1 --delay 200000 -I javajacoco --jvm-options \
-./config.json -- ./keycloak-26.0.7/lib/quarkus-run.jar \
+./config.json -- ./target/keycloak-26.0.7/lib/quarkus-run.jar \
 io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
 
 ```
@@ -44,13 +49,13 @@ io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
 Примечание: при запуске фаззинг-тестирования в однопоточном режиме HTML-отчёт о покрытии
 не формируется.
 
-В данном примере будет наблюдаться рост покрытия. В директории `/path/to/out/EAT_OUT/queue` будут находиться файлы с входными данными, которые приводят к нормальному завершению и росту покрытия.  
+В данном примере будет наблюдаться рост покрытия. В директории `/path/to/out/queue` будут находиться файлы с входными данными, которые приводят к нормальному завершению и росту покрытия.  
 
-**Фаззинг-тестирование в несколько потоков**
+# Фаззинг-тестирование в несколько потоков
 
 При параллельном фаззинг-тестировании `Keycloak` возможны конфликты из-за использования одного и того же TCP-порта (8080). Для изоляции окружений в данном примере используется запуск в Docker-контейнерах.
 
-В `Dockerfile` в строке Х необходимо указать правильный путь до keycloak-26.0.7.
+В заранее подготовленном `Dockerfile` (строка 15) укажите актуальный путь к каталогу `keycloak-26.0.7`.
 
 Примечание: Используйте только латинские символы в путях и названиях файлов.
 
@@ -61,7 +66,7 @@ docker build -t ubuntu-keycloak-fuzz --build-arg USER_ID=$(id -g) \
         --build-arg USER_NAME=$(id -un) --build-arg GROUP_ID=$(id -g) \
         -f Dockerfile .
 ```
-
+i
 где:
 
 * `build` - создание образа из `Dockerfile`;
@@ -72,12 +77,12 @@ docker build -t ubuntu-keycloak-fuzz --build-arg USER_ID=$(id -g) \
 * `-f Dockerfile` - указывается название `Dockerfile`, который необходимо собрать;
 * `.` - указание рабочей директории Docker-образа.
 
-Создайте файл `config_docker.json`, скопировав содержимое `config.json`, и замените все пути на те, которые используются внутри Docker-контейнера (как в `Dockerfile`).
+Создайте файл `config_docker.json`, скопировав содержимое `config.json`, и замените все пути на те, которые используются внутри Docker-контейнера.
 
 Запустите фаззинг-тестирование:
 
 ```bash
-/path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F \
+sudo /path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F \
  --wait-next-instance 20000 --auto-stop-target-server --tcp-recv-response \
  --docker ubuntu-keycloak-fuzz -i /path/to/in -t 200000 --java-jacoco-trace --no-affinity \
 --max-file-size 10M --port 8080 -o path/to/out -I javajacoco --ip 127.0.0.1 --delay 200000 \ 
@@ -95,14 +100,17 @@ docker build -t ubuntu-keycloak-fuzz --build-arg USER_ID=$(id -g) \
 * `--no-affinity` - отключение привязки процессов к свободным ядрам;
 * `--max-file-size` - максимальный размер файла в начальном корпусе входных данных.
 
-Пользовательский интерфейс UI
+Остальные опции см. выше.
+Примечание: при запуске необходимо указывать полные пути.
+
+# Пользовательский интерфейс UI
 Запустите в другом терминале пользовательский интерфейс UI:
 
 
 ```bash
-/path/to/crusher/bin_x86-64/ui --outdir /path/to/out
+sudo /path/to/crusher/bin_x86-64/ui --outdir /path/to/out
 ```
-Просмотр отчета о покрытии
+# Просмотр отчета о покрытии
 
 Перенесите директорию с отчётом на уровень выше каталога `out` и задайте для неё права доступа:
 
