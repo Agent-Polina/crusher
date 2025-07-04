@@ -45,7 +45,7 @@ eval exec echo "'$JAVA'" $JAVA_RUN_OPTS
 Примечание: при запуске фаззинг-тестирования в однопоточном режиме HTML-отчёт о покрытии
 не формируется.
 
-В данном примере будет наблюдаться рост покрытия. В директории `/path/to/out/queue` будут находиться файлы с входными данными, которые приводят к нормальному завершению и росту покрытия.  
+В данном примере будет наблюдаться рост покрытия. В директории `./out/queue` будут находиться файлы с входными данными, которые приводят к нормальному завершению и росту покрытия.  
 
 Перед каждым запуском фаззинга необходимо удалить директорию `out`.
 
@@ -57,7 +57,7 @@ rm -rf out
 
 При параллельном фаззинг-тестировании `Keycloak` возможны конфликты из-за использования одного и того же TCP-порта (8080). Для изоляции окружений в данном примере используется запуск в Docker-контейнерах.
 
-В заранее подготовленном `Dockerfile` в строке 15 укажите актуальный путь к каталогу `keycloak-26.0.7`.
+В заранее подготовленном `Dockerfile` в строке 15 укажите актуальный путь к каталогу, в котором расположена директория `keycloak-26.0.7`.
 
 Примечание: Используйте только латинские символы в путях и названиях файлов.
 
@@ -84,7 +84,7 @@ docker build -t ubuntu-keycloak-fuzz --build-arg USER_ID=$(id -g) \
 Запустите фаззинг-тестирование:
 
 ```bash
-sudo /path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F --wait-next-instance 20000 --auto-stop-target-server --tcp-recv-response --docker ubuntu-keycloak-fuzz -i /path/to/in -t 200000 --java-jacoco-trace --no-affinity --max-file-size 10M --port 8080 -o path/to/out -I javajacoco --ip 127.0.0.1 --delay 200000 -T NetworkTCP --jvm-options /path/to/config_docker.json -- /path/to/keycloak-26.0.7/lib/quarkus-run.jar io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
+sudo /path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F --wait-next-instance 20000 --auto-stop-target-server --tcp-recv-response --docker ubuntu-keycloak-fuzz -i ./in -t 200000 --java-jacoco-trace --no-affinity --max-file-size 10M --port 8080 -o ./out -I javajacoco --ip 127.0.0.1 --delay 200000 -T NetworkTCP --jvm-options /path/to/config_docker.json -- /path/to/keycloak-26.0.7/lib/quarkus-run.jar io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
 ```
 
 где:
