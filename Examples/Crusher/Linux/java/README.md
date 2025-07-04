@@ -79,12 +79,12 @@ docker build -t ubuntu-keycloak-fuzz --build-arg USER_ID=$(id -g) \
 * `-f Dockerfile` - указывается название `Dockerfile`, который необходимо собрать;
 * `.` - указание рабочей директории Docker-образа.
 
-Создайте файл `config_docker.json`, скопировав содержимое `config.json`, и замените все пути на те, которые используются внутри Docker-контейнера.
+Для фаззинга в Docker-контейнерах необходимо создать `config_docker.json`, в котором пути будут настроены как внутри контенейра. В данном примере все пути совпадают и можно использовать `config.json`.
 
 Запустите фаззинг-тестирование:
 
 ```bash
-sudo /path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F --wait-next-instance 20000 --auto-stop-target-server --tcp-recv-response --docker ubuntu-keycloak-fuzz -i /path/to/in -t 200000 --java-jacoco-trace --no-affinity --max-file-size 10M --port 8080 -o /path/to/out -I javajacoco --ip 127.0.0.1 --delay 200000 -T NetworkTCP --jvm-options /path/to/config_docker.json -- /path/to/keycloak-26.0.7/lib/quarkus-run.jar io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
+sudo /path/to/crusher/bin_x86-64/fuzz_manager --start 2 --eat-cores 1 --dse-cores 0 -F --wait-next-instance 20000 --auto-stop-target-server --tcp-recv-response --docker ubuntu-keycloak-fuzz -i /path/to/in -t 200000 --java-jacoco-trace --no-affinity --max-file-size 10M --port 8080 -o /path/to/out -I javajacoco --ip 127.0.0.1 --delay 200000 -T NetworkTCP --jvm-options /path/to/config.json -- /path/to/keycloak-26.0.7/lib/quarkus-run.jar io.quarkus.bootstrap.runner.QuarkusEntryPoint --profile=dev start-dev
 ```
 
 где:
