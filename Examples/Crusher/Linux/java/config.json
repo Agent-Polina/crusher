@@ -1,0 +1,31 @@
+{
+  "jvm_options": [
+    "-Dkc.config.built=true",
+    "-Djava.util.concurrent.ForkJoinPool.common.threadFactory=io.quarkus.bootstrap.forkjoin.QuarkusForkJoinWorkerThreadFactory",
+    "-XX:MetaspaceSize=96M",
+    "-XX:MaxMetaspaceSize=256m",
+    "-Dfile.encoding=UTF-8",
+    "-Dsun.stdout.encoding=UTF-8",
+    "-Dsun.err.encoding=UTF-8",
+    "-Dstdout.encoding=UTF-8",
+    "-Dstderr.encoding=UTF-8",
+    "-XX:+ExitOnOutOfMemoryError",
+    "-Djava.security.egd=file:/dev/urandom",
+    "-XX:+UseG1GC",
+    "-XX:FlightRecorderOptions=stackdepth=512",
+    "-Xms64m",
+    "-Xmx512m",
+    "--add-opens=java.base/java.util=ALL-UNNAMED",
+    "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+    "--add-opens=java.base/java.security=ALL-UNNAMED",
+    "-Duser.language=en",
+    "-Duser.country=US",
+    "-Dkc.home.dir=/path/to/target/keycloak-26.0.7/bin/..",
+    "-Djboss.server.config.dir=/path/to/target/keycloak-26.0.7/bin/../conf",
+    "-Djava.util.logging.manager=org.jboss.logmanager.LogManager",
+    "-Dpicocli.disable.closures=true",
+    "-Dquarkus-log-max-startup-records=10000"
+  ]
+}
+
+
