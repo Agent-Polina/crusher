@@ -33,7 +33,6 @@ COPY license $WORK_DIR/license
 USER root
 RUN $WORK_DIR/license/license.sh && $WORK_DIR/license/test-protected
 
-# 
-spring-petclinic 
+# spring-petclinic 
 COPY spring-petclinic $WORK_DIR/spring-petclinic
 
