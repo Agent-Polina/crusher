@@ -15,7 +15,7 @@ RUN addgroup --gid $GROUP_ID $USER_NAME
 
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER_NAME
 
-ENV WORK_DIR /home/$USER_NAME
+ENV WORK_DIR=/home/$USER_NAME
 WORKDIR $WORK_DIR
 
 # Install hasp-service (for license)
