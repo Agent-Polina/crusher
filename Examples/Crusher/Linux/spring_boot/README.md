@@ -22,6 +22,7 @@ $ sudo apt install -y openjdk-17-jdk maven
 $ git clone https://github.com/spring-projects/spring-petclinic.git
 $ cd spring-petclinic
 $ ./mvnw package -DskipTests
+$ cd ../
 ```
 
 ## 2.2. Начальный корпус вх. данных
