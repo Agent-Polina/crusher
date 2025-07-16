@@ -137,6 +137,7 @@ sudo -E /path/to/crusher/bin_x86-64/ui -o out
 2. Отчёт о покрытии.
 
 ```shell
+$ sudo chown -R $USER:$USER out/
 $ firefox out/.tmp/JavaJacocoTrace/report/index.html
 ```
 Отчет содержит информацию о покрытии по инструкциям и ветвлениям (branches) на уровне JVM.
