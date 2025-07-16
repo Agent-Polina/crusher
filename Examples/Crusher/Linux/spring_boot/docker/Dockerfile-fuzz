@@ -26,9 +26,9 @@ RUN echo 'deb https://repo.ispras.ru/apt /' | tee /etc/apt/sources.list.d/ispras
 
 # Setup license
 RUN mkdir -p /etc/hasplm
-COPY license/hasplm.ini /etc/hasplm/hasplm.ini
+COPY docker/license/hasplm.ini /etc/hasplm/hasplm.ini
 USER $USER_NAME
-COPY license $WORK_DIR/license
+COPY docker/license $WORK_DIR/license
 # check
 USER root
 RUN $WORK_DIR/license/license.sh && $WORK_DIR/license/test-protected
